@@ -5,9 +5,7 @@ import { useState } from "react";
 interface Experience {
   id: number;
   title: string;
-  company: string;
   period: string;
-  description: string;
 }
 
 export default function ApplyExperience() {
@@ -15,9 +13,7 @@ export default function ApplyExperience() {
     {
       id: 1,
       title: "",
-      company: "",
       period: "",
-      description: "",
     },
   ]);
 
@@ -29,9 +25,7 @@ export default function ApplyExperience() {
         {
           id: newId,
           title: "",
-          company: "",
           period: "",
-          description: "",
         },
       ]);
     }
