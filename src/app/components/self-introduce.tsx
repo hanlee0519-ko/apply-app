@@ -10,37 +10,30 @@ export default function SelfIntroduce() {
   const isAtLimit = characterCount === maxLength;
 
   const handleIntroductionChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = event.target.value;
     if (value.length <= maxLength) setIntroduction(value);
   };
 
   return (
-    <div className="p-4">
-      <h1>
-        <strong>자기소개</strong>
-      </h1>
-      <article>
-        <form>
-          <fieldset>
-            <label>
-              <textarea
-                value={introduction}
-                onChange={handleIntroductionChange}
-                placeholder="자기소개를 입력해 주세요."
-              />
-            </label>
+    <section>
+      <h1 className="text-xl font-bold">간단한 자기소개</h1>
+      <div className="m-2">
+        <input
+          className="w-full h-[150px]"
+          value={introduction}
+          onChange={handleIntroductionChange}
+          placeholder="자기소개를 입력해 주세요."
+        />
 
-            <footer>
-              {isAtLimit && <p>{"300자 이내로 입력해 주세요."}</p>}
-              <p>
-                {characterCount} / {maxLength}
-              </p>
-            </footer>
-          </fieldset>
-        </form>
-      </article>
-    </div>
+        <footer className="text-right m-2">
+          {isAtLimit && <p>{"300자 이내로 입력해 주세요."}</p>}
+          <p>
+            {characterCount} / {maxLength}
+          </p>
+        </footer>
+      </div>
+    </section>
   );
 }

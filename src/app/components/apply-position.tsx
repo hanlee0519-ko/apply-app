@@ -12,21 +12,30 @@ export default function ApplyPosition() {
   };
 
   return (
-    <div className="p-4">
-      <h1>
-        <strong>지원하는 포지션 : {selectedField}</strong>
-      </h1>
+    <section className="my-5">
+      <h1 className="text-xl font-bold">지원하는 포지션 : {selectedField}</h1>
       <form>
         <fieldset>
           <ul>
             {fieldvalues.map((field, index) => (
-              <li key={index} onClick={() => handleFieldSelect(field)}>
+              <li
+                key={`position-${index}`}
+                onClick={() => handleFieldSelect(field)}
+                className={`
+                  cursor-pointer my-1 p-2 rounded-md
+                  ${
+                    selectedField === field
+                      ? "bg-gray-200 text-blue-500"
+                      : "text-gray-700"
+                  }
+                `}
+              >
                 {field}
               </li>
             ))}
           </ul>
         </fieldset>
       </form>
-    </div>
+    </section>
   );
 }
