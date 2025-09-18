@@ -11,15 +11,8 @@ export default function Home() {
           제출하기
         </button>
       </header>
-      <main className="flex h-screen">
-        <article className="w-[65%] bg-gray-200 p-4">
-          <h1 className="text-2xl font-bold">미리보기</h1>
-        </article>
-        <article className="w-[35%] p-4">
-          <SelfIntroduce />
-          <ApplyPosition />
-          <ApplyExperience />
-        </article>
+      <main className="w-screen h-screen">
+        <SelfIntroduce />
       </main>
     </div>
   );

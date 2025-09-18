@@ -38,15 +38,15 @@ export default function ApplyExperience() {
   };
 
   const updateTitle = (index: number, value: string) => {
-    const newExperiences = [...experiences];
-    newExperiences[index].title = value;
-    setExperiences(newExperiences);
+    setExperiences((prev) =>
+      prev.map((exp, i) => (i === index ? { ...exp, title: value } : exp))
+    );
   };
 
   const updatePeriod = (index: number, value: string) => {
-    const newExperiences = [...experiences];
-    newExperiences[index].period = value;
-    setExperiences(newExperiences);
+    setExperiences((prev) =>
+      prev.map((exp, i) => (i === index ? { ...exp, period: value } : exp))
+    );
   };
 
   return (
