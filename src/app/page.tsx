@@ -1,6 +1,5 @@
+import ApplyIntroduce from "./components/apply-introduce";
 import ApplyExperience from "./components/apply-experience";
-import ApplyPosition from "./components/apply-position";
-import SelfIntroduce from "./components/self-introduce";
 
 export default function Home() {
   return (
@@ -12,7 +11,8 @@ export default function Home() {
         </button>
       </header>
       <main className="w-screen h-screen">
-        <SelfIntroduce />
+        <ApplyIntroduce />
+        <ApplyExperience />
       </main>
     </div>
   );
