@@ -1,0 +1,23 @@
+{
+  "parentId": "frontend",
+  "children": [
+    {
+      "id": "react-dev",
+      "name": "React 개발자",
+      "parentId": "frontend",
+      "isLeaf": true
+    },
+    {
+      "id": "vue-dev",
+      "name": "Vue 개발자",
+      "parentId": "frontend",
+      "isLeaf": true
+    },
+    {
+      "id": "angular-dev",
+      "name": "Angular 개발자",
+      "parentId": "frontend",
+      "isLeaf": true
+    }
+  ]
+}

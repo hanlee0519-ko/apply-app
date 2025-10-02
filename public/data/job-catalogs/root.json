@@ -1,0 +1,22 @@
+{
+  "root": [
+    {
+      "id": "frontend",
+      "name": "프론트엔드",
+      "parentId": null,
+      "isLeaf": false
+    },
+    {
+      "id": "backend",
+      "name": "백엔드",
+      "parentId": null,
+      "isLeaf": false
+    },
+    {
+      "id": "mobile",
+      "name": "모바일",
+      "parentId": null,
+      "isLeaf": true
+    }
+  ]
+}
