@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { jobCatalogApi, JobCatalogItem } from "./api/jobCatalogApi";
-
 interface TreeNodeProps {
   node: JobCatalogItem;
 }
+
+import { useState, useEffect } from "react";
+import { jobCatalogApi, JobCatalogItem } from "./api/jobCatalogApi";
 
 export default function JobTreeNode({ node }: TreeNodeProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
