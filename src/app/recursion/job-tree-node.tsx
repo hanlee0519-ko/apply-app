@@ -10,7 +10,7 @@ import { jobCatalogApi, JobCatalogItem } from "./api/jobCatalogApi";
 export default function JobTreeNode({ node }: TreeNodeProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [childrenArr, setChildrenArr] = useState<JobCatalogItem[]>([]);
-  const [error, setError] = useState<Error | null>(null);
+  const [isError, setIsError] = useState<Error | null>(null);
 
   const isLeaf = node.isLeaf;
   const icon = isLeaf ? "▷" : isOpen ? "▼" : "▶";
@@ -22,8 +22,12 @@ export default function JobTreeNode({ node }: TreeNodeProps) {
       try {
         const children = await jobCatalogApi.getChildrenByParentId(node.id);
         setChildrenArr(children);
-      } catch (err) {
-        setError(err as Error);
+      } catch (error) {
+        if (error instanceof Error) {
+          setIsError(error);
+        } else {
+          setIsError(new Error("알수없는 에러 발생"));
+        }
       }
     };
 
@@ -31,6 +35,10 @@ export default function JobTreeNode({ node }: TreeNodeProps) {
       getChildren();
     }
   }, [isOpen, isLeaf, childrenArr.length, node.id]);
+
+  if (isError) {
+    return <p>{`Job Tree 에러 ${isError.message}`}</p>;
+  }
 
   return (
     <article className="ml-5">
@@ -40,7 +48,6 @@ export default function JobTreeNode({ node }: TreeNodeProps) {
 
       {isOpen && (
         <section>
-          {error && <p>에러발생 : 트리노드</p>}
           {childrenArr.map((childNode) => (
             <JobTreeNode key={childNode.id} node={childNode} />
           ))}

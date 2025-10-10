@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { jobCatalogApi, JobCatalogItem } from "./api/jobCatalogApi";
-import Tree from "./compound-tree-node";
-import TESTNode from "./test-tree-node";
+import JobCatalog from "./compound-job-catalog";
 
 export default function JobRootTreeNode() {
   const [rootNodeArr, setRootNodeArr] = useState<JobCatalogItem[]>([]);
@@ -14,15 +13,17 @@ export default function JobRootTreeNode() {
     setSelectedPosition(nodeName);
   };
 
-  console.log("Position Type", Boolean(selectedPosition), selectedPosition);
-
   useEffect(() => {
     const getRootNode = async () => {
       try {
         const response = await jobCatalogApi.getRoot();
         setRootNodeArr(response);
       } catch (error) {
-        setError(error as Error);
+        if (error instanceof Error) {
+          setError(error);
+        } else {
+          setError(new Error("알수없는 에러 발생"));
+        }
       }
     };
 
@@ -37,7 +38,7 @@ export default function JobRootTreeNode() {
     <section>
       {selectedPosition && <h1>{selectedPosition}</h1>}
       {rootNodeArr.map((rootNode) => (
-        <TESTNode key={rootNode.id} node={rootNode} onSelect={handleSelect} />
+        <JobCatalog key={rootNode.id} node={rootNode} onSelect={handleSelect} />
       ))}
     </section>
   );

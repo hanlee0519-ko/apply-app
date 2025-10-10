@@ -13,13 +13,16 @@ export default function TESTNode({ node, onSelect }: TESTNodeProps) {
   const [nodeChildArr, setNodeChildArr] = useState<JobCatalogItem[] | []>([]);
   const [isError, setIsError] = useState<Error | null>(null);
 
-  const handleClick = () => {
-    setIsOpen((prev) => !prev);
-    if (isLeaf) onSelect(node.name);
-  };
-
   const isLeaf = node.isLeaf;
   const nodeIcon = isLeaf ? "▷" : isOpen ? "▼" : "►";
+
+  const handleClick = () => {
+    setIsOpen((prev) => !prev);
+  };
+
+  const hanldeSelect = () => {
+    onSelect(node.name);
+  };
 
   useEffect(() => {
     const getChildren = async () => {
@@ -43,7 +46,7 @@ export default function TESTNode({ node, onSelect }: TESTNodeProps) {
 
   return (
     <article className="ml-10 cursor-pointer">
-      <span onClick={handleClick}>
+      <span onClick={isLeaf ? hanldeSelect : handleClick}>
         {nodeIcon} {node.name}
       </span>
       {isOpen &&
