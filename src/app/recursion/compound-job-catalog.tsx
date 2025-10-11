@@ -7,7 +7,7 @@ type JobCatalogContextType = {
   onSelect: (nodeName: string) => void;
 };
 
-type JobCatalogItemProps = {
+type JobCatalogNodeProps = {
   node: JobCatalogItem;
   children: ReactNode;
   onSelect: (nodeName: string) => void;
@@ -37,7 +37,7 @@ function useJobCatalogContext(): JobCatalogContextType {
   return context;
 }
 
-const JobCatalogItem = ({ node, children, onSelect }: JobCatalogItemProps) => {
+const JobCatalogNode = ({ node, children, onSelect }: JobCatalogNodeProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const handleToggle = () => setIsOpen((prev) => !prev);
 
@@ -104,14 +104,14 @@ const JobCatalogChildren = () => {
   return (
     <>
       {childrenArr.map((childNode) => (
-        <JobCatalog.Item
+        <JobCatalog.Node
           key={childNode.id}
           node={childNode}
           onSelect={onSelect}
         >
           <JobCatalog.Label />
           <JobCatalog.Children />
-        </JobCatalog.Item>
+        </JobCatalog.Node>
       ))}
     </>
   );
@@ -119,14 +119,14 @@ const JobCatalogChildren = () => {
 
 const JobCatalog = ({ node, onSelect }: JobCatalogProps) => {
   return (
-    <JobCatalog.Item node={node} onSelect={onSelect}>
+    <JobCatalog.Node node={node} onSelect={onSelect}>
       <JobCatalog.Label />
       <JobCatalog.Children />
-    </JobCatalog.Item>
+    </JobCatalog.Node>
   );
 };
 
-JobCatalog.Item = JobCatalogItem;
+JobCatalog.Node = JobCatalogNode;
 JobCatalog.Label = JobCatalogLabel;
 JobCatalog.Children = JobCatalogChildren;
 
