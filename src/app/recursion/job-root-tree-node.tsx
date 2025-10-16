@@ -1,45 +1,53 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { jobCatalogApi, JobCatalogItem } from "./api/jobCatalogApi";
-import JobCatalog from "./compound-job-catalog";
+import { Suspense, useState } from "react";
+import { createRootResource, JobCatalogItem } from "./api/jobCatalogApi";
+import JobTreeNode from "./job-tree-node";
+
+type RootResource = { read: () => JobCatalogItem[] };
+
+const rootResource: RootResource = createRootResource();
+
+function JobTreeContent({ onSelect }: { onSelect: (name: string) => void }) {
+  const rootNodeArr = rootResource.read();
+
+  return (
+    <>
+      {rootNodeArr.map((rootNode) => (
+        <JobTreeNode key={rootNode.id} node={rootNode} onSelect={onSelect} />
+      ))}
+    </>
+  );
+}
 
 export default function JobRootTreeNode() {
-  const [rootNodeArr, setRootNodeArr] = useState<JobCatalogItem[]>([]);
-  const [error, setError] = useState<Error | null>(null);
   const [selectedPosition, setSelectedPosition] = useState<string>("");
 
   const handleSelect = (nodeName: string) => {
     setSelectedPosition(nodeName);
   };
 
-  useEffect(() => {
-    const getRootNode = async () => {
-      try {
-        const response = await jobCatalogApi.getRoot();
-        setRootNodeArr(response);
-      } catch (error) {
-        if (error instanceof Error) {
-          setError(error);
-        } else {
-          setError(new Error("알수없는 에러 발생"));
-        }
-      }
-    };
-
-    getRootNode();
-  }, []);
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
   return (
     <section>
-      {selectedPosition && <h1>{selectedPosition}</h1>}
-      {rootNodeArr.map((rootNode) => (
-        <JobCatalog key={rootNode.id} node={rootNode} onSelect={handleSelect} />
-      ))}
+      {selectedPosition && (
+        <div className="m-4">
+          <span className="p-2 bg-yellow-200 text-2xl font-bold">
+            {`지원 포지션: ${selectedPosition}`}
+          </span>
+        </div>
+      )}
+
+      <Suspense
+        fallback={
+          <article className="p-4">
+            <p>루트 노드 로딩 중...</p>
+            <p>루트 노드 로딩 중...</p>
+            <p>루트 노드 로딩 중...</p>
+          </article>
+        }
+      >
+        <JobTreeContent onSelect={handleSelect} />
+      </Suspense>
     </section>
   );
 }

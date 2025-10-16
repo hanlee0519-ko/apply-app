@@ -1,3 +1,5 @@
+import { wrapPromise } from "./resource";
+
 export interface JobCatalogItem {
   id: string;
   name: string;
@@ -23,6 +25,7 @@ export const jobCatalogApi = {
     }
 
     const data: RootResponse = await response.json();
+    await new Promise((resolve) => setTimeout(resolve, 3000));
     return data.root;
   },
 
@@ -37,7 +40,15 @@ export const jobCatalogApi = {
     }
 
     const data: ChildrenResponse = await response.json();
-
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     return data.children;
   },
+};
+
+export const createRootResource = () => {
+  return wrapPromise(jobCatalogApi.getRoot());
+};
+
+export const createChildrenResource = (parentId: string) => {
+  return wrapPromise(jobCatalogApi.getChildrenByParentId(parentId));
 };

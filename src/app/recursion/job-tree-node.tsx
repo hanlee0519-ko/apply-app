@@ -1,58 +1,72 @@
 "use client";
 
+import { Suspense, useState, useEffect } from "react";
+import { JobCatalogItem, createChildrenResource } from "./api/jobCatalogApi";
+
 interface TreeNodeProps {
   node: JobCatalogItem;
+  onSelect?: (nodeName: string) => void;
 }
 
-import { useState, useEffect } from "react";
-import { jobCatalogApi, JobCatalogItem } from "./api/jobCatalogApi";
+type ChildrenResource = { read: () => JobCatalogItem[] };
 
-export default function JobTreeNode({ node }: TreeNodeProps) {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [childrenArr, setChildrenArr] = useState<JobCatalogItem[]>([]);
-  const [isError, setIsError] = useState<Error | null>(null);
+export default function JobTreeNode({ node, onSelect }: TreeNodeProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [childrenResource, setChildrenResource] =
+    useState<ChildrenResource | null>(null);
 
   const isLeaf = node.isLeaf;
-  const icon = isLeaf ? "▷" : isOpen ? "▼" : "▶";
+  const nodeIcon = isLeaf ? "▷" : isOpen ? "▼" : "▶";
 
-  const handleToggle = () => setIsOpen((prev) => !prev);
+  const handleSelect = () => onSelect?.(node.name);
+  const handleClick = () => setIsOpen((prev) => !prev);
 
   useEffect(() => {
-    const getChildren = async () => {
-      try {
-        const children = await jobCatalogApi.getChildrenByParentId(node.id);
-        setChildrenArr(children);
-      } catch (error) {
-        if (error instanceof Error) {
-          setIsError(error);
-        } else {
-          setIsError(new Error("알수없는 에러 발생"));
-        }
-      }
-    };
-
-    if (!isLeaf && isOpen && childrenArr.length === 0) {
-      getChildren();
+    if (!isLeaf && isOpen && !childrenResource) {
+      setChildrenResource(createChildrenResource(node.id));
     }
-  }, [isOpen, isLeaf, childrenArr.length, node.id]);
-
-  if (isError) {
-    return <p>{`Job Tree 에러 ${isError.message}`}</p>;
-  }
+  }, [isOpen, isLeaf, childrenResource, node.id]);
 
   return (
     <article className="ml-5">
-      <span onClick={handleToggle} className="cursor-pointer">
-        {icon} {node.name}
+      <span
+        onClick={isLeaf ? handleSelect : handleClick}
+        className="cursor-pointer hover:text-blue-600"
+      >
+        {nodeIcon} {node.name}
       </span>
 
-      {isOpen && (
-        <section>
-          {childrenArr.map((childNode) => (
-            <JobTreeNode key={childNode.id} node={childNode} />
-          ))}
-        </section>
+      {!isLeaf && isOpen && childrenResource && (
+        <Suspense
+          fallback={
+            <article className="ml-5">
+              <p>노드 로딩 중...</p>
+              <p>노드 로딩 중...</p>
+              <p>노드 로딩 중...</p>
+            </article>
+          }
+        >
+          <ChildrenList resource={childrenResource} onSelect={onSelect} />
+        </Suspense>
       )}
     </article>
+  );
+}
+
+function ChildrenList({
+  resource,
+  onSelect,
+}: {
+  resource: ChildrenResource;
+  onSelect?: (nodeName: string) => void;
+}) {
+  const childrenArr = resource.read();
+
+  return (
+    <section>
+      {childrenArr.map((childNode) => (
+        <JobTreeNode key={childNode.id} node={childNode} onSelect={onSelect} />
+      ))}
+    </section>
   );
 }
